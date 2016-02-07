@@ -1,6 +1,7 @@
 from url_constants import URLTED, URLTOPICS
 # Custom xbmc thing for fast parsing. Can't rely on lxml being available as of 2012-03.
 import CommonFunctions as xbmc_common
+import HTMLParser
 
 class Topics:
 
@@ -19,6 +20,7 @@ class Topics:
 
     def get_talks(self, topic):
         page = 0
+        h = HTMLParser.HTMLParser()
 
         while True:
             page += 1
@@ -36,7 +38,7 @@ class Topics:
                 if description:
                     anchors = xbmc_common.parseDOM(description, 'a')
                     if anchors:
-                        title = anchors[0]
+                        title = h.unescape(anchors[0])
                     speakers = xbmc_common.parseDOM(description, 'h4', {'class':'[^\'"]*talk-link__speaker[^\'"]*'})
                     if speakers:
                         speaker = speakers[0]
