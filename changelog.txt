@@ -1,3 +1,6 @@
+[B]Version 4.3.0[/B]
+Add browsing by talk language
+
 [B]Version 4.2.6[/B]
 Fix topics (issue#54)
 

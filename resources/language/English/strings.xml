@@ -9,6 +9,7 @@
     <string id="30004">Search</string>
     <string id="30005">Favorites</string>
     <string id="30007">Topics</string>
+    <string id="30008">Languages</string>
     
     <!--NavItems-->
     <string id="30020"> Next</string>
@@ -24,7 +25,9 @@
     <string id="30034">Search for Talks on TED.com</string>
     <!--Favorites-->
     <string id="30035">Your favorite talks.</string>
-    
+
+    <string id="30036">Talks in various languages.</string>
+
     <!--Errors-->
     <string id="30050">Logon Error</string>
     <string id="30051">User could not be authenticated</string>

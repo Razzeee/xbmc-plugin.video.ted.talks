@@ -9,6 +9,7 @@ from model.speakers_scraper import Speakers
 from model.util import resizeImage
 from model.search_scraper import Search
 from model.topics_scraper import Topics
+from model.language_scraper import Languages
 import menu_util
 import os
 import time
@@ -102,6 +103,7 @@ class UI:
         self.addItem(plugin.getLS(30002), 'speakers', video_info={'Plot':plugin.getLS(30032)})
         self.addItem(plugin.getLS(30004) + "...", 'search', video_info={'Plot':plugin.getLS(30034)})
         self.addItem(plugin.getLS(30007), 'topics', video_info={'Plot':plugin.getLS(30033)})
+        self.addItem(plugin.getLS(30008), 'languages', video_info={'Plot':plugin.getLS(30036)})
         self.endofdirectory()
 
     def newTalksRss(self):
@@ -239,6 +241,29 @@ class TopicVideosAction(Action):
             self.ui.addItem(title, 'playVideo', link, img, isFolder=False, video_info={ 'author': speaker })
         self.ui.endofdirectory()
 
+class LanguagesAction(Action):
+
+    def __init__(self, ui, *args, **kwargs):
+        super(LanguagesAction, self).__init__('languages', [], *args, **kwargs)
+        self.ui = ui
+
+    def run_internal(self, args):
+        languages = Languages(self.get_HTML, self.logger)
+        for value, label in languages.get_languages():
+            self.ui.addItem(label, 'languageVids', args={ 'language': value }, isFolder=True)
+        self.ui.endofdirectory()        
+
+class LanguagesVideosAction(Action):
+
+    def __init__(self, ui, *args, **kwargs):
+        super(LanguagesVideosAction, self).__init__('languageVids', ['language'], *args, **kwargs)
+        self.ui = ui
+
+    def run_internal(self, args):
+        languages = Languages(self.get_HTML, self.logger)
+        for title, link, img, speaker in languages.get_talks(args['language']):
+            self.ui.addItem(title, 'playVideo', link, img, isFolder=False, video_info={ 'author': speaker })
+        self.ui.endofdirectory()
 
 class SearchActionBase(Action):
 
@@ -310,7 +335,9 @@ class Main:
                 SpeakerGroupAction(ui, logger=plugin.report, get_HTML=self.get_HTML),
                 SpeakerVideosAction(ui, logger=plugin.report, get_HTML=self.get_HTML),
                 TopicsAction(ui, logger=plugin.report, get_HTML=self.get_HTML),
-                TopicVideosAction(ui, logger=plugin.report, get_HTML=self.get_HTML)
+                TopicVideosAction(ui, logger=plugin.report, get_HTML=self.get_HTML),
+                LanguagesAction(ui, logger=plugin.report, get_HTML=self.get_HTML),
+                LanguagesVideosAction(ui, logger=plugin.report, get_HTML=self.get_HTML)
             ]
             modes = dict([(m.mode, m) for m in modes])
             mode = self.args_map['mode']
